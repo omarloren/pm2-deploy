@@ -146,7 +146,7 @@ hook() {
 bash_me() {
   test -n "$1" || abort
   local command=$1
-  echo "ssh-agent bash -c \"ssh-add $remote; $command\""  
+  echo "ssh-agent bash -c \"ssh-add $remote; $command\""
 }
 
 #
@@ -162,7 +162,7 @@ setup() {
   log running setup
   log cloning $repo
   run "$(bash_me "git clone $repo $path/source")"
-  
+
   test $? -eq 0 || abort failed to clone
   run "ln -sfn $path/source $path/current"
   test $? -eq 0 || abort symlink failed
@@ -197,7 +197,7 @@ deploy() {
 
   # reset HEAD
   log resetting HEAD to $ref
-  run "cd $path/source && git checkout $ref && git pull $ref"
+  run "cd $path/source && git checkout $ref && git pull"
   test $? -eq 0 || abort git reset failed
 
   # link current
@@ -283,7 +283,7 @@ revert_to() {
 
 check_for_local_changes() {
   local path=`config_get path`
-  
+
   run "echo $path && cd $path/source && git --no-pager diff --exit-code --quiet"
   test $? -eq 0 || abort "commit or stash your changes before deploying"
   run "pwd && cd $path/source && git --no-pager diff --exit-code --quiet --cached"
