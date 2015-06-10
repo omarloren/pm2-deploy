@@ -145,8 +145,9 @@ hook() {
 
 bash_me() {
   test -n "$1" || abort
+  local remote=`config_get remote-key`
   local command=$1
-  echo "ssh-agent bash -c \"ssh-add $remote; $command\""
+  echo "ssh-agent bash -c \"ssh-add $remote &>/dev/null && $command\""
 }
 
 #
@@ -156,7 +157,6 @@ bash_me() {
 setup() {
   local path=`config_get path`
   local repo=`config_get repo`
-  local remote=`config_get remote-key`
   run "mkdir -p $path/{shared/{logs,pids},source}"
   test $? -eq 0 || abort setup paths failed
   log running setup
@@ -185,9 +185,10 @@ deploy() {
   hook pre-deploy || abort pre-deploy hook failed
   # fetch source
   log fetching updates
-  run "$(cd $path/source && $(bash_me "git fetch --all"))"
+  run "cd $path/source && $(bash_me "git fetch --all")"
+  #run "cd $path/source && git status"
 
-  test $? -eq 0 || abort fetch failed
+  #test $? -eq 0 || abort fetch failed
 
   # latest tag
   if test -z "$ref"; then
@@ -201,7 +202,9 @@ deploy() {
 
   # reset HEAD
   log pulling changes #resetting HEAD to $ref
-  run "cd $path/source && git checkout $(split $ref '/' 2) && git pull"
+  local pull_command=`bash_me "git pull"`
+  run "cd $path/source && $pull_command && git status" #git checkout $(split $ref '/' 2) && $(bash_me "git pull origin staging")"
+
   #test $? -eq 0 || abort git reset failed
 
   # link current

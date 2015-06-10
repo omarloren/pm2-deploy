@@ -2,3 +2,4 @@ node_modules
 *.log
 *.log
 *.pid
+redo_pm2.sh
