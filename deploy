@@ -197,7 +197,7 @@ deploy() {
 
   # reset HEAD
   log resetting HEAD to $ref
-  run "cd $path/source && git reset --hard $ref"
+  run "cd $path/source && git checkout $ref && git reset --hard $ref"
   test $? -eq 0 || abort git reset failed
 
   # link current
