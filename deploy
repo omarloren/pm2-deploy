@@ -196,9 +196,9 @@ deploy() {
   fi
 
   # reset HEAD
-  log resetting HEAD to $ref
+  log pulling changes #resetting HEAD to $ref
   run "cd $path/source && git checkout $ref && git pull"
-  test $? -eq 0 || abort git reset failed
+  #test $? -eq 0 || abort git reset failed
 
   # link current
   run "ln -sfn $path/source $path/current"
