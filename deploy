@@ -169,6 +169,10 @@ setup() {
   log setup complete
 }
 
+split() {
+  echo `echo $1| cut -d $2 -f $3`
+}
+
 #
 # Deploy [ref].
 #
@@ -197,7 +201,7 @@ deploy() {
 
   # reset HEAD
   log pulling changes #resetting HEAD to $ref
-  run "cd $path/source && git checkout $ref && git pull"
+  run "cd $path/source && git checkout $(split $ref '/' 2) && git pull"
   #test $? -eq 0 || abort git reset failed
 
   # link current
