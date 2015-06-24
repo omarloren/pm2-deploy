@@ -187,7 +187,7 @@ deploy() {
   # fetch source
   log fetching updates
   run "cd $path/source && $(bash_me "git fetch --all")"
-  run "cd $path/source && git status"
+  #run "cd $path/source && git status"
 
   #test $? -eq 0 || abort fetch failed
 
@@ -204,7 +204,7 @@ deploy() {
   # reset HEAD
   log pulling changes #resetting HEAD to $ref
   local pull_command=`bash_me "git pull"`
-  run "cd $path/source && $pull_command && git status" #git checkout $(split $ref '/' 2) && $(bash_me "git pull origin staging")"
+  run "cd $path/source && $pull_command" #&& git status" #git checkout $(split $ref '/' 2) && $(bash_me "git pull origin staging")"
 
   #test $? -eq 0 || abort git reset failed
 
